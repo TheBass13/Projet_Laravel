@@ -16,6 +16,7 @@ class UserController extends Controller
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
             $this->content['token'] =  $user->createToken('kiosque')->accessToken;
+            $this->content['user'] = $user;
             $status = 200;
         }
         else{
