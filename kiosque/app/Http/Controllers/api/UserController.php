@@ -9,13 +9,15 @@ use Response;
 
 class UserController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         $this->content = array();
     }
-    public function login(){
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+
+    public function login()
+    {
+        if(Auth::attempt(['email' => request('user')['email'], 'password' => request('user')['password']])){
             $user = Auth::user();
-            $this->content['token'] =  $user->createToken('kiosque')->accessToken;
             $this->content['user'] = $user;
             $status = 200;
         }
@@ -24,5 +26,24 @@ class UserController extends Controller
             $status = 401;
         }
         return response()->json($this->content, $status);
+    }
+
+    public function register()
+    {
+        $data = request('user');
+        $email = $data['email'];
+        $user = User::whereEmail($email)->first();
+        if($user)
+        {
+            return response()->json($user,401);
+        }else
+        {
+            User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+            ]);
+            return response()->json('ok',200);
+        }
     }
 }
