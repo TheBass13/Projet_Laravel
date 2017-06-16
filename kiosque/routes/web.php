@@ -19,3 +19,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Auth::routes();
+
+Route::get('/registermobile', 'RegisterMController@index')->name('registermobile');
+Route::get('/loginmobile', 'LoginMController@index')->name('loginmobile');
+Route::get('/subscriptionmobile', 'SubMController@index')->name('subscriptionmobile');
+
+
