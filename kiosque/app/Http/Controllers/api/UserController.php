@@ -16,13 +16,15 @@ class UserController extends Controller
 
     public function login()
     {
-        if(Auth::attempt(['email' => request('user')['email'], 'password' => request('user')['password']])){
+        if(Auth::attempt(['email' => request('user')['email'], 'password' => request('user')['password']]))
+        {
             $user = Auth::user();
             $this->content['user'] = $user;
+            $this->content['login'] = true;
             $status = 200;
         }
         else{
-            $this->content['error'] = "Unauthorised";
+            $this->content['login'] = false;
             $status = 401;
         }
         return response()->json($this->content, $status);

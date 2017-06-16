@@ -28,6 +28,8 @@ use Laravel\Passport\HasApiTokens;
  * @method static \Illuminate\Database\Query\Builder|\App\User whereUpdatedAt($value)
  * @mixin \Eloquent
  * @property-read \App\Fiche $Fiche
+ * @property bool $isemploye
+ * @method static \Illuminate\Database\Query\Builder|\App\User whereIsemploye($value)
  */
 class User extends Authenticatable
 {
