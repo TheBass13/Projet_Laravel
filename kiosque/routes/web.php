@@ -13,8 +13,6 @@
 
 // Routes non mobiles
 
-use App\mobile;
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -40,7 +38,9 @@ Route::get('/publish/list', [
 
 // Routes mobiles
 
+Route::get('/mobile/home', 'UserMobileController@home');
 Route::get('/mobile/login', 'UserMobileController@loginForm');
-Route::get('/mobile/login/send', 'UserMobileController@login');
-Route::get('/logout/mobile', 'UserMobileController@logout');
-Route::post('/register/mobile', 'UserMobileController@register');
+Route::post('/mobile/login/send', 'UserMobileController@login');
+Route::post('/mobile/logout', 'UserMobileController@logout');
+Route::get('/mobile/register', 'UserMobileController@registerForm');
+Route::post('/mobile/register/send', 'UserMobileController@register');
