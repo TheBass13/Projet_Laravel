@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.mobileLayout')
 
 @section('content')
     <div class="text-center">
@@ -11,17 +11,29 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><b>Information</b></div>
                     <div class="panel-body">
-                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
+
+                        <div class="row">
+                            <div class="left">    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                                    @if(Session::has('alert-' . $msg))
+                                        <h6 class="alert alert-{{ $msg }} center right-align red-text">{{ Session::get('alert-' . $msg) }}
+                                            <a href=""><i
+                                                        class="material-icons small">fermer</i></a>
+                                        </h6>
+                                    @endif
+                                @endforeach</div>
+                        </div>
+
+                        <form class="form-horizontal" role="form" method="POST" action="{{ url('/mobile/register/send') }}">
                             {{ csrf_field() }}
-                            <div class="form-group{{ $errors->has('name_user') ? ' has-error' : '' }}">
-                                <label for="name_user" class="col-md-4 control-label">Nom d'utilisateur</label>
+                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                <label for="name" class="col-md-4 control-label">Nom d'utilisateur</label>
 
                                 <div class="col-md-6">
-                                    <input id="name_user" type="text" class="form-control" name="name_user" value="{{ old('name_user') }}">
+                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}">
 
-                                    @if ($errors->has('name_user'))
+                                    @if ($errors->has('name'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('name_user') }}</strong>
+                                        <strong>{{ $errors->first('name') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -55,15 +67,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <label for="name" class="col-md-4 control-label">Nom</label>
+                            <div class="form-group{{ $errors->has('lastname') ? ' has-error' : '' }}">
+                                <label for="lastname" class="col-md-4 control-label">Nom</label>
 
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}">
+                                    <input id="lastname" type="text" class="form-control" name="lastname" value="{{ old('lastname') }}">
 
-                                    @if ($errors->has('name'))
+                                    @if ($errors->has('lastname'))
                                         <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('lastname') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -78,6 +90,34 @@
                                     @if ($errors->has('firstname'))
                                         <span class="help-block">
                                         <strong>{{ $errors->first('firstname') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group{{ $errors->has('birthdate') ? ' has-error' : '' }}">
+                                <label for="birthdate" class="col-md-4 control-label">Date de naissance</label>
+
+                                <div class="col-md-6">
+                                    <input id="birthdate" type="text" class="form-control" name="birthdate" value="{{ old('birthdate') }}">
+
+                                    @if ($errors->has('birthdate'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('birthdate') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="form-group{{ $errors->has('birthplace') ? ' has-error' : '' }}">
+                                <label for="birthplace" class="col-md-4 control-label">Lieu de naissance</label>
+
+                                <div class="col-md-6">
+                                    <input id="birthplace" type="text" class="form-control" name="birthplace" value="{{ old('birthplace') }}">
+
+                                    @if ($errors->has('birthplace'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('birthplace') }}</strong>
                                     </span>
                                     @endif
                                 </div>
@@ -115,7 +155,7 @@
                                 <label for="zipcode" class="col-md-4 control-label">Code postal</label>
 
                                 <div class="col-md-6">
-                                    <input id="zipcode" type="text" class="form-control" name="zipcode" value="{{ old('zipcode') }}">
+                                    <input id="zipcode" type="number" class="form-control" name="zipcode" value="{{ old('zipcode') }}">
 
                                     @if ($errors->has('zipcode'))
                                         <span class="help-block">
@@ -153,6 +193,21 @@
                                 </div>
                             </div>
 
+                            <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
+                                <label for="phone" class="col-md-4 control-label">Telephone</label>
+
+                                <div class="col-md-6">
+                                    <input id="phone" type="number" class="form-control" name="phone" value="{{ old('phone') }}">
+
+                                    @if ($errors->has('phone'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('phone') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
+                            </div>
+
+
                             <div class="form-group">
                                 <div class="text-center">
                                     <div class="col-md-6 col-md-offset-4">
@@ -169,4 +224,4 @@
         </div>
     </div>
 
-    @endsection
+@endsection

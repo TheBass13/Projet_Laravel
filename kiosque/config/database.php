@@ -67,6 +67,14 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'testing' =>[
+
+            'driver' => 'sqlite',
+            'database' => ':memory:',
+            'prefix' => '',
+
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'host' => env('DB_HOST', 'localhost'),

@@ -11,6 +11,8 @@
 |
 */
 
+// Routes non mobiles
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -19,10 +21,28 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
+Route::get('/publish', [
+    'middleware' => 'auth',
+    'uses' => 'publicationController@showForm'
+]);
 
-Route::get('/registermobile', 'RegisterMController@index')->name('registermobile');
-Route::get('/loginmobile', 'LoginMController@index')->name('loginmobile');
-Route::get('/subscriptionmobile', 'SubMController@index')->name('subscriptionmobile');
+Route::post('/publish/send', [
+    'middleware' => 'auth',
+    'uses' => 'publicationController@sendForm'
+])->name('sendPublish');
 
+Route::get('/publish/list', [
+    'middleware' => 'auth',
+    'uses' => 'publicationController@listPubs'
+])->name('listPublish');
 
+// Routes mobiles
+
+Route::get('/mobile/home', 'UserMobileController@home');
+Route::get('/mobile/login', 'UserMobileController@loginForm');
+Route::post('/mobile/login/send', 'UserMobileController@login');
+Route::post('/mobile/logout', 'UserMobileController@logout');
+Route::get('/mobile/register', 'UserMobileController@registerForm');
+Route::post('/mobile/register/send', 'UserMobileController@register');
+Route::get('/mobile/listPublication', 'PublicationMobileController@getPublication');
+Route::get('/mobile/getPublicationWithId/{id}', 'PublicationMobileController@getPublicationWithId');
