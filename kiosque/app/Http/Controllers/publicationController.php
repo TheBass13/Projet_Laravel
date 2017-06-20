@@ -19,11 +19,11 @@ class publicationController extends Controller
         }
     }
 
-    public function sendForm(Request $request)
+    public function sendForm()
     {
         if(auth()->user()['original']['isemploye'] == true)
         {
-            $validator = \Validator::make($request->all(), [
+            $validator = \Validator::make(request()->all(), [
                 "titre" => "required|max:50|min:2",
                 "nbnum" => "required",
                 "photo" => "required",
@@ -35,7 +35,7 @@ class publicationController extends Controller
                     ->withInput()
                     ->withErrors($validator);
             } else {
-                $publication = Publication::create($request->all());
+                $publication = Publication::create(request()->all());
                 $publication->save();
                 return redirect('home');
             }

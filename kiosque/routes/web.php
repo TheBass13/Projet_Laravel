@@ -39,6 +39,7 @@ Route::get('/publish/list', [
 // Routes mobiles
 
 Route::get('/mobile/home', 'UserMobileController@home');
+Route::get('/mobile', 'UserMobileController@home');
 Route::get('/mobile/login', 'UserMobileController@loginForm');
 Route::post('/mobile/login/send', 'UserMobileController@login');
 Route::post('/mobile/logout', 'UserMobileController@logout');

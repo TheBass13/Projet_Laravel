@@ -45,7 +45,7 @@
                         @if (session()->get('login'))
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ session()->has('user_name') }} <span class="caret"></span>
+                                    {{ session()->get('user_name') }} <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">

@@ -60,7 +60,72 @@ class UserController extends Controller
                 'birthplace'=> $jsonUser['birthplace'],
                 'user_id' => $user['id'],
             ]);
+
             return response()->json($user,200);
         }
+    }
+
+    public function editProfil($id)
+    {
+        $jsonUser = request('user');
+        if($jsonUser['id'] == $id)
+        {
+            if(User::find($id))
+            {
+                $user = User::find($id);
+                $fiche = Fiche::whereUserId($id)->first();
+                if($user->email == $jsonUser['email'])
+                {
+                    $user->name = $jsonUser['name'];
+                    $user->password = bcrypt($jsonUser['password']);
+                    $fiche->firstname = $jsonUser['firstname'];
+                    $fiche->lastname = $jsonUser['lastname'];
+                    $fiche->adress = $jsonUser['adress'];
+                    $fiche->country = $jsonUser['country'];
+                    $fiche->city = $jsonUser['city'];
+                    $fiche->zipcode = $jsonUser['zipcode'];
+                    $fiche->phone = $jsonUser['phone'];
+                    $fiche->birthplace = $jsonUser['birthplace'];
+                    $fiche->birthdate = $jsonUser['birthdate'];
+                    $user->save();
+                    $fiche->save();
+                }else{
+                    if(User::whereEmail($jsonUser['email'])->first()) {
+                        return response()->json(false, 401);
+                    }else{
+                        $user->name = $jsonUser['name'];
+                        $user->password = bcrypt($jsonUser['password']);
+                        $user->email = $jsonUser['email'];
+                        $fiche->firstname = $jsonUser['firstname'];
+                        $fiche->lastname = $jsonUser['lastname'];
+                        $fiche->adress = $jsonUser['adress'];
+                        $fiche->country = $jsonUser['country'];
+                        $fiche->city = $jsonUser['city'];
+                        $fiche->zipcode = $jsonUser['zipcode'];
+                        $fiche->phone = $jsonUser['phone'];
+                        $fiche->birthplace = $jsonUser['birthplace'];
+                        $fiche->birthdate = $jsonUser['birthdate'];
+                        $user->save();
+                        $fiche->save();
+                    }
+                }
+                return response()->json($user,200);
+            }else{
+                return response()->json('ko',401);
+            }
+
+        }else
+        {
+            return redirect('/home');
+        }
+    }
+
+    public function showProfil($id)
+    {
+            $user = User::whereId($id)->get();
+            $fiche = Fiche::whereUserId($id)->get();
+            $profil['user'] = $user;
+            $profil['fiche'] = $fiche;
+            return response()->json($profil,200,[],JSON_NUMERIC_CHECK);
     }
 }
