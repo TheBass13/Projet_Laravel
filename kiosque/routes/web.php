@@ -46,3 +46,5 @@ Route::get('/mobile/register', 'UserMobileController@registerForm');
 Route::post('/mobile/register/send', 'UserMobileController@register');
 Route::get('/mobile/listPublication', 'PublicationMobileController@getPublication');
 Route::get('/mobile/getPublicationWithId/{id}', 'PublicationMobileController@getPublicationWithId');
+Route::post('/mobile/editProfil','UserMobileController@editProfil');
+Route::get('/mobile/detailProfil/{id}/{operation}','UserMobileController@detailProfil');

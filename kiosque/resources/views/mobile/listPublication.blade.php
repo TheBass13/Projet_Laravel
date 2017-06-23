@@ -1,7 +1,7 @@
 @extends('layouts.mobileLayout')
 
 @section('css')
-    <link href="/css/comment.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/public/css/comment.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 @endsection
 
 @section('content')
@@ -24,12 +24,12 @@
                         <img class="activator" src="/images/office.jpg">
                     </div>
                     <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4"> <h4><b>{{ $publications['titre'] }}</b></h4><i class="material-icons right">more_vert</i></span>
+                        <span class="card-title activator grey-text text-darken-4"><a href="/mobile/getPublicationWithId/{{ $publications['id'] }}"><h4><b>{{ $publications['titre'] }}</b></h4></a><i class="material-icons right">more_vert</i></span>
                         <p><b>Nombre de magazin par an :</b> {{ $publications['nbnum'] }}\an</p>
                         <p><b>Prix :</b> {{ $publications['prix'] }}€</p>
                     </div>
                     <div class="card-reveal">
-                       <a href="/mobile/getPublicationWithId/{{ $publications['id'] }}"><span class="card-title grey-text text-darken-4" > <h4><b>Details :</b></h4><i class="material-icons right">close</i></span></a>
+                      <span class="card-title grey-text text-darken-4" > <h4><b>Details :</b></h4><i class="material-icons right">close</i></span>
                         <p>{{ $publications['details'] }}</p>
                     </div>
                 </div>

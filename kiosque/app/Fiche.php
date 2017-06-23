@@ -40,4 +40,5 @@ class Fiche extends Model
     protected $fillable = [
         'firstname', 'lastname','adress', 'country', 'city', 'zipcode', 'phone', 'birthdate', 'birthplace', 'user_id'
     ];
+
 }

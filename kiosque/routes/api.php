@@ -18,8 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['namespace' => 'api'], function () {
-    Route::post('/login', 'UserController@login');
-    Route::post('/register', 'UserController@register');
+    Route::post('/login', 'UserApiController@login');
+    Route::post('/register', 'UserApiController@register');
     Route::get('/getPublication','PublicationApiController@getPublication');
     Route::get('/getPublicationWithId/{id}','PublicationApiController@getPublicationWithId');
+    Route::post('/editProfil','UserApiController@editProfil');
+    Route::get('/detailProfil/{id}','UserApiController@detailProfil');
 });

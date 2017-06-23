@@ -12,7 +12,7 @@
                                 @if(Session::has('alert-' . $msg))
                                     <h6 class="alert alert-{{ $msg }} center right-align red-text">{{ Session::get('alert-' . $msg) }}
                                         <a href=""><i
-                                                    class="material-icons small">Fermer</i></a>
+                                                    class="material-icons small">FERMER</i></a>
                                     </h6>
                                 @endif
                             @endforeach</div>

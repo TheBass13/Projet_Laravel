@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Fiche;
 use Illuminate\Http\Request;
 
 class userMobileController extends Controller
@@ -90,7 +91,6 @@ class userMobileController extends Controller
         // exécution de la session
         $content = json_decode(curl_exec($ch), true);
 
-        dd($data['user']['email']);
         // fermeture de la session
         curl_close($ch);
         if($content['email'] == $data['user']['email'])
@@ -105,6 +105,83 @@ class userMobileController extends Controller
             session()->flash('alert-danger', 'Email déjà utilisé');
             return redirect('/mobile/register');
         }
+    }
+
+    public function detailProfil($id,$operation)
+    {
+        $url = "http://kiosque.dev/api/detailProfil/$id";
+
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,   // return web page
+            CURLOPT_HEADER         => false,  // don't return headers
+            CURLOPT_FOLLOWLOCATION => true,   // follow redirects
+            CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
+            CURLOPT_ENCODING       => "",     // handle compressed
+            CURLOPT_USERAGENT      => "test", // name of client
+            CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
+            CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
+            CURLOPT_TIMEOUT        => 120,    // time-out on response
+        );
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, $options);
+
+        $profil = json_decode(curl_exec($ch), true);
+
+        curl_close($ch);
+
+        if($operation == "edit"){
+            return view('mobile/editProfil')->with('detailProfil',$profil);
+        }elseif ($operation =="detail"){
+            return view('mobile/detailProfil')->with('detailProfil',$profil);
+        }
+    }
+
+    public function editProfil(Request $request)
+    {
+
+        $id = session('user_id');
+        // initialisation de la session
+        $ch = curl_init();
+
+        // configuration des options
+        curl_setopt($ch, CURLOPT_URL, "http://kiosque.dev/api/editProfil");
+        curl_setopt($ch, CURLOPT_POST, 1 );
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+        $data = [];
+        $data['user']['name'] = $request->only('name')['name'];
+        $data['user']['email'] = $request->only('email')['email'];
+       // $data['user']['password'] = $request->only('password')['password'];
+        $data['user']['firstname'] = $request->only('firstname')['firstname'];
+        $data['user']['lastname'] = $request->only('lastname')['lastname'];
+        $data['user']['adress'] = $request->only('adress')['adress'];
+        $data['user']['city'] = $request->only('city')['city'];
+        $data['user']['zipcode'] = $request->only('zipcode')['zipcode'];
+        $data['user']['country'] = $request->only('country')['country'];
+        $data['user']['phone'] = $request->only('phone')['phone'];
+        $data['user']['birthdate'] = $request->only('birthdate')['birthdate'];
+        $data['user']['birthplace'] = $request->only('birthplace')['birthplace'];
+        $data['user']['id'] = $id;
+
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+
+        $profil = json_decode(curl_exec($ch), true);
+
+        if (curl_errno($ch)) {
+            dd(curl_error($ch));
+        }
+
+        // fermeture de la session
+        curl_close($ch);
+
+       return redirect('/mobile/detailProfil/'.$id.'/detail');
+
     }
 
     public function home()

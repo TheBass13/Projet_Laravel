@@ -26,7 +26,7 @@
                 @else
                     <li><a href="/mobile/listAbonnement">Abonnement</a></li>
                     <li><a href="/mobile/listPublication">Magazine</a></li>
-                    <li><a href="#"
+                    <li><a href="/mobile/detailProfil/{{ session()->get('user_id')}}/detail"
                            class="center">{{ session()->get('user_name') }}</a></li>
                     <li>
                         <a href="{{ url('/mobile/logout') }}"
@@ -46,16 +46,19 @@
                 <!-- Authentication Links -->
                 @if (session()->get('login'))
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <a href="/mobile/detailProfil/{{ session()->get('user_id')}}/detail" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                             {{ session()->get('user_name') }} <span class="caret"></span>
                         </a>
+                    </li>
+
+                    <li><a href="/mobile/listPublication">Magazine</a></li>
 
                         <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a href="{{ url('/mobile/logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                    Logout
+                                    Deconnexion
                                 </a>
 
                                 <form id="logout-form" action="{{ url('/mobile/logout') }}" method="POST" style="display: none;">
@@ -63,7 +66,6 @@
                                 </form>
                             </li>
                         </ul>
-                    </li>
                 @else
                     <li><a href="{{ url('/mobile/login') }}">Login</a></li>
                     <li><a href="{{ url('/mobile/register') }}">Register</a></li>
@@ -88,7 +90,7 @@
 
 <!--  Scripts-->
 <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="/js/materialize.js"></script>
-<script src="/js/init.js"></script>
+<script src="/public/js/materialize.js"></script>
+<script src="/public/js/init.js"></script>
 
 </html>
