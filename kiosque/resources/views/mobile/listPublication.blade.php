@@ -1,7 +1,7 @@
 @extends('layouts.mobileLayout')
 
 @section('css')
-    <link href="/public/css/comment.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/public/css/publication.css" type="text/css" rel="stylesheet" media="screen,projection"/><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 @endsection
 
 @section('content')

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Publication whereTitre($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Publication whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Subscription[] $Subscription
  */
 class Publication extends Model
 {
@@ -32,4 +33,8 @@ class Publication extends Model
     ];*/
 
     public $guarded = [];
+
+    public function Subscription(){
+        return $this->hasMany('App\Subscription');
+    }
 }

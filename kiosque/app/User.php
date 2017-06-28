@@ -30,6 +30,9 @@ use Laravel\Passport\HasApiTokens;
  * @property-read \App\Fiche $Fiche
  * @property bool $isemploye
  * @method static \Illuminate\Database\Query\Builder|\App\User whereIsemploye($value)
+ * @property string $confirmation_token
+ * @method static \Illuminate\Database\Query\Builder|\App\User whereConfirmationToken($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Subscription[] $Subscription
  */
 class User extends Authenticatable
 {
@@ -41,7 +44,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'isemploye'
+        'name', 'email', 'password', 'isemploye','confirmation_token'
     ];
 
     /**
@@ -56,5 +59,9 @@ class User extends Authenticatable
     public function Fiche()
     {
         return $this->hasOne('App\Fiche');
+    }
+
+    public function Subscription(){
+        return $this->hasMany('App\Subscription');
     }
 }

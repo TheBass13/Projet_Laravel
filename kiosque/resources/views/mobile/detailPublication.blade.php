@@ -1,7 +1,7 @@
 @extends('layouts.mobileLayout')
 
 @section('css')
-    <link href="/css/comment.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="/css/publication.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 @endsection
 
 @section('content')
@@ -20,7 +20,7 @@
         <div class="row">
             @foreach($detailPublication as $detailPublication)
                 <div class="center valign-wrapper">
-                    <div class="col s12 m7">
+                    <div class="detailPublication">
                         <div class="card medium">
                             <div class="card-image">
                                 <img src="/images/office.jpg">
@@ -31,7 +31,18 @@
                             </div>
                             <div class="card-action">
                                 <a href="/mobile/listPublication">Retour</a>
-                                <a href="#">S'abonner</a>
+                                <a class="waves-effect waves-light modal-trigger" href="#modal1">S'abonner</a>
+                            </div>
+                            <!-- Modal Structure -->
+                            <div id="modal1" class="modal">
+                                <div class="modal-content">
+                                    <h4>S'abonner</h4>
+                                    <p>Êtes vous sûre de souscrire à cette abonnement ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="/mobile/subscription/{{ $detailPublication['id'] }}" class=" modal-action modal-close waves-effect waves-green btn-flat">Valider</a>
+                                    <a href="" class=" modal-action modal-close waves-effect waves-red btn-flat">Retour</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -40,6 +51,16 @@
         </div>
     </div>
 
+    <script>
+        $(function(){
+            $(document).ready(function(){
+                // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+                $('.modal-trigger').leanModal();
+            });
+        });
+    </script>
+
 @endsection
+
 
 

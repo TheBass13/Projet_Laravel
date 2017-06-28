@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Fiche;
+use App\Notifications\RegisteredUser;
+use App\User;
 use Illuminate\Http\Request;
 
 class userMobileController extends Controller
@@ -14,7 +16,12 @@ class userMobileController extends Controller
 
     public function login(Request $request)
     {
-        if($request->only('email'))
+        $confirmation_token = $request->only('confirmation_token')['confirmation_token'];
+
+        if($confirmation_token != null){
+            return redirect('mobile/login')->with('error','Vous n\'avez pas confirmé votre compte');
+        }
+        elseif($request->only('email'))
         {
             // initialisation de la session
             $ch = curl_init();
@@ -24,7 +31,6 @@ class userMobileController extends Controller
             curl_setopt($ch, CURLOPT_HEADER, 0);
             $data = [];
             $data['user']['email'] = $request->only('email')['email'];
-
             $data['user']['password'] = $request->only('password')['password'];
 
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
@@ -35,19 +41,18 @@ class userMobileController extends Controller
 
             if($content['login'])
             {
-
                 session()->put('user_name',$content['user']['name']);
                 session()->put('user_id',$content['user']['id']);
                 session()->put('login', true);
-                return redirect('/mobile/home');
+                return redirect("/mobile/getSubscriptionWithId/".session()->get('user_id'));
             }else{
-                session()->flash('alert-danger', 'Utilisateur ou mot de passe incorrect');
+                session()->flash('error','Utilisateur ou mot de passe incorrect');
                 session()->put('login', false);
                 return redirect('/mobile/login');
             }
         }else
         {
-            return redirect('/mobile/home');
+            return redirect('mobile/login')->with('error','Utilisateur ou mot de passe incorrect');
         }
     }
     
@@ -85,6 +90,7 @@ class userMobileController extends Controller
         $data['user']['phone'] = $request->only('phone')['phone'];
         $data['user']['birthdate'] = $request->only('birthdate')['birthdate'];
         $data['user']['birthplace'] = $request->only('birthplace')['birthplace'];
+       // $data['user']['confirmation_token'] = bcrypt(str_random(16));
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         
@@ -93,12 +99,10 @@ class userMobileController extends Controller
 
         // fermeture de la session
         curl_close($ch);
+
         if($content['email'] == $data['user']['email'])
         {
-            session()->put('user_name',$content['name']);
-            session()->put('user_id',$content['id']);
-            session()->put('login', true);
-            return redirect('/mobile/home');
+            return redirect("/mobile/home")->with('success','Inscription réussite ! Vous avez reçu un mail');
         }
         else
         {
@@ -182,6 +186,68 @@ class userMobileController extends Controller
 
        return redirect('/mobile/detailProfil/'.$id.'/detail');
 
+    }
+
+    public function getUserWithToken($id,$token){
+        $url = "http://kiosque.dev/api/getUserWithToken/$id/$token";
+
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,   // return web page
+            CURLOPT_HEADER         => false,  // don't return headers
+            CURLOPT_FOLLOWLOCATION => true,   // follow redirects
+            CURLOPT_MAXREDIRS      => 10,     // stop after 10 redirects
+            CURLOPT_ENCODING       => "",     // handle compressed
+            CURLOPT_USERAGENT      => "test", // name of client
+            CURLOPT_AUTOREFERER    => true,   // set referrer on redirect
+            CURLOPT_CONNECTTIMEOUT => 120,    // time-out on connect
+            CURLOPT_TIMEOUT        => 120,    // time-out on response
+        );
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, $options);
+
+        $user = json_decode(curl_exec($ch), true);
+
+        curl_close($ch);
+
+        return $user;
+    }
+
+    public function confirmUser(Request $request,$id, $token){
+
+        $user = $this->getUserWithToken($id,$token);
+
+        if($user){
+            // initialisation de la session
+            $ch = curl_init();
+
+            // configuration des options
+            curl_setopt($ch, CURLOPT_URL, "http://kiosque.dev/api/confirmUser");
+            curl_setopt($ch, CURLOPT_POST, 1 );
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+            $data = [];
+            $data['user']['id'] = $id;
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+
+            $confirmation_token = json_decode(curl_exec($ch), true);
+
+            // fermeture de la session
+            curl_close($ch);
+
+            session()->put('user_name',$user['user']['name']);
+            session()->put('user_id',$confirmation_token['id']);
+            session()->put('login', true);
+
+            return redirect('/mobile/listPublication');
+        }else {
+            return redirect('mobile/login')->with('error','Ce lien ne semble plus valide');
+        }
     }
 
     public function home()

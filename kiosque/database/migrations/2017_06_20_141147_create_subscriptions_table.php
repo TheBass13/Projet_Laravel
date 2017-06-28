@@ -16,7 +16,6 @@ class CreateSubscriptionsTable extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->integer('payment_id')->nullable();
             $table->integer('publication_id');
             $table->boolean('payed')->default(false);
             $table->timestamps();

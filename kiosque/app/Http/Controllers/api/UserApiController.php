@@ -4,8 +4,11 @@ namespace App\Http\Controllers\api;
 
 use App\Fiche;
 use App\Http\Controllers\Controller;
+use App\Notifications\RegisteredUser;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use App\User;
+use Illuminate\Notifications\RoutesNotifications;
 
 class UserApiController extends Controller
 {
@@ -14,6 +17,7 @@ class UserApiController extends Controller
         $this->content = array();
     }
 
+    //Connexion
     public function login()
     {
         if (Auth::attempt(['email' => request('user')['email'], 'password' => request('user')['password']])) {
@@ -28,6 +32,23 @@ class UserApiController extends Controller
         return response()->json($this->content, $status);
     }
 
+    /**
+     * Créer une nouvelle instance d'utilisateur après validation de l'enregistrement
+     *
+     * @param  array  $data
+     * @return User
+     */
+    protected function create(array $data)
+    {
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'confirmation_token' =>str_replace('/','', bcrypt(str_random(16))),
+        ]);
+    }
+
+    //Enregistrement
     public function register()
     {
         $jsonUser = request('user');
@@ -36,11 +57,11 @@ class UserApiController extends Controller
         if ($user) {
             return response()->json(false, 401);
         } else {
-            $user = User::create([
-                'name' => $jsonUser['name'],
-                'email' => $jsonUser['email'],
-                'password' => bcrypt($jsonUser['password']),
-            ])['id'];
+
+            new Registered($user = $this->create($jsonUser));
+
+            //Envoi du mail à l'utilisateur
+           $user->notify(new RegisteredUser());
 
             $user = User::whereEmail($email)->first();
 
@@ -61,6 +82,7 @@ class UserApiController extends Controller
         }
     }
 
+    //Edition du profil
     public function editProfil()
     {
         $jsonUser = request('user');
@@ -108,6 +130,23 @@ class UserApiController extends Controller
         }
     }
 
+    //Confirmation de l'utilisateur apres reception du mail
+    public function confirmUser()
+    {
+        $jsonUser = request('user');
+        $id = $jsonUser['id'];
+        if (User::find($id)) {
+            $user = User::find($id);
+            $user->confirmation_token = null;
+            $user->save();
+            return response()->json($user, 200);
+        }
+        else {
+            return response()->json('KO', 401);
+        }
+    }
+
+    //Détail du profil utilisateur
     public function detailProfil($id)
     {
         $user = User::find($id);
@@ -127,6 +166,20 @@ class UserApiController extends Controller
         $profil['user']['birthdate'] = $fiche->birthdate;
 
         return response()->json($profil, 200, [], JSON_NUMERIC_CHECK);
+
+    }
+
+    //Récupération de l'utilisateur non validé
+    public function getUserWithToken($id,$token)
+    {
+        $user = User::where('id',$id)->where('confirmation_token',$token)->first();
+        if($user){
+            $userFound['user']['name'] = $user->name;
+            $userFound['user']['userFound'] = true;
+        }else{
+            $userFound = false;
+        }
+        return response()->json($userFound, 200, [], JSON_NUMERIC_CHECK);
 
     }
 }
