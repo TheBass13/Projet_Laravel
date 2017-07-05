@@ -19,6 +19,8 @@ class CreateSubscriptionsTable extends Migration
             $table->integer('payment_id')->nullable();
             $table->integer('publication_id');
             $table->boolean('payed')->default(false);
+            $table->date('expiry_date');
+            $table->boolean('actif')->default(true);
             $table->timestamps();
         });
     }

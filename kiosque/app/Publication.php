@@ -24,10 +24,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Publication whereTitre($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Publication whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Subscription[] $Subscription
  */
 class Publication extends Model
 {
     protected $fillable = [
         'titre', 'nbnum', 'photo', 'details', 'prix'
     ];
+
+    public function Subscription()
+    {
+        return $this->hasMany('App\Subscription');
+    }
+
 }

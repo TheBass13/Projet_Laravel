@@ -34,10 +34,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Fiche whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\App\Fiche whereZipcode($value)
  * @mixin \Eloquent
+ * @property-read \App\User $user
  */
 class Fiche extends Model
 {
     protected $fillable = [
         'firstname', 'lastname','adress', 'country', 'city', 'zipcode', 'phone', 'birthdate', 'birthplace', 'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

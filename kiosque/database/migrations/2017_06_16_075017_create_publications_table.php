@@ -18,7 +18,7 @@ class CreatePublicationsTable extends Migration
             $table->string('titre');
             $table->integer('nbnum');
             $table->string('photo');
-            $table->string('details');
+            $table->text('details');
             $table->integer('prix');
             $table->timestamps();
         });

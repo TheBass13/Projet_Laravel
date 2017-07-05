@@ -19,29 +19,100 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('home', 'HomeController@index')->name('home');
 
-Route::get('/publish', [
+Route::get('publish', [
     'middleware' => 'auth',
     'uses' => 'publicationController@showForm'
 ]);
 
-Route::post('/publish/send', [
+Route::post('publish/send', [
     'middleware' => 'auth',
     'uses' => 'publicationController@sendForm'
 ])->name('sendPublish');
 
-Route::get('/publish/list', [
+Route::get('publication/list', [
     'middleware' => 'auth',
     'uses' => 'publicationController@listPubs'
-])->name('listPublish');
+]);
 
-// Routes mobiles
+Route::get('publication/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'publicationController@detailPublication'
+]);
 
-Route::get('/mobile/home', 'UserMobileController@home');
-Route::get('/mobile', 'UserMobileController@home');
-Route::get('/mobile/login', 'UserMobileController@loginForm');
-Route::post('/mobile/login/send', 'UserMobileController@login');
-Route::post('/mobile/logout', 'UserMobileController@logout');
-Route::get('/mobile/register', 'UserMobileController@registerForm');
-Route::post('/mobile/register/send', 'UserMobileController@register');
+Route::get('publication/edit/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'publicationController@showEditForm'
+]);
+
+Route::post('publication/editDetailSend/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'publicationController@sendEditDetailsForm'
+]);
+
+Route::post('publication/editPhotoSend/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'publicationController@sendEditPhotoForm'
+]);
+
+Route::get('customer/list', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@customerList'
+]);
+
+Route::get('customer/historyForm', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@addmultihistoform'
+]);
+
+Route::post('customer/sendhistoryForm', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@sendmultihistoform'
+]);
+
+Route::get('customer/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@detailProfil'
+]);
+
+Route::get('customer/editform/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@editForm'
+]);
+
+Route::post('customer/edit/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@editprofil'
+])->name('sendPublish');
+
+Route::post('historyAdd/{id}', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@addhistory'
+]);
+
+Route::get('search/autocomplete/publication', [
+    'middleware' => 'auth',
+    'uses' => 'PublicationController@autoComplete'
+]);
+
+Route::get('search/publication', [
+    'middleware' => 'auth',
+    'uses' => 'PublicationController@search'
+]);
+
+Route::get('search/autocomplete/customer', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@autoComplete'
+]);
+
+Route::get('search/customer/', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@search'
+]);
+
+Route::get('search/customer/multihisto', [
+    'middleware' => 'auth',
+    'uses' => 'CustomerController@searchHisto'
+]);
+
